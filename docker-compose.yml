@@ -12,7 +12,7 @@ services:
 
   rabbitmq:
 #    image: "rabbitmq:3"
-    image: "widyamedia/awx_rabbit"
+    image: "widyamedia/awx_rabbitmq"
     environment:
       RABBITMQ_DEFAULT_VHOST: awx
 
