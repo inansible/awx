@@ -3,6 +3,7 @@ services:
   postgres:
 #    image: "postgres:9.6"
     image: "widyamedia/awx_postgres"
+    restart: always
     environment:
       POSTGRES_USER: awx
       POSTGRES_PASSWORD: 4wxp@ss01
@@ -13,17 +14,20 @@ services:
   rabbitmq:
 #    image: "rabbitmq:3"
     image: "widyamedia/awx_rabbitmq"
+    restart: always
     environment:
       RABBITMQ_DEFAULT_VHOST: awx
 
   memcached:
 #    image: "memcached:alpine"
     image: "widyamedia/awx_memcached"
+    restart: always
 
   awx_web:
     # image: "geerlingguy/awx_web:latest"
 #    image: "ansible/awx_web:latest"
     image: "widyamedia/awx_web"
+    restart: always
     links:
       - rabbitmq
       - memcached
@@ -53,6 +57,7 @@ services:
     # image: "geerlingguy/awx_task:latest"
 #    image: "ansible/awx_task:latest"
     image: "widyamedia/awx_task"
+    restart: always
     links:
       - rabbitmq
       - memcached
