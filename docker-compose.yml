@@ -1,0 +1,73 @@
+version: '3'
+services:
+  postgres:
+    image: "postgres:9.6"
+    environment:
+      POSTGRES_USER: awx
+      POSTGRES_PASSWORD: 4wxp@ss01
+      POSTGRES_DB: awx
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: "rabbitmq:3"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: awx
+
+  memcached:
+    image: "memcached:alpine"
+
+  awx_web:
+    # image: "geerlingguy/awx_web:latest"
+    image: "ansible/awx_web:latest"
+    links:
+      - rabbitmq
+      - memcached
+      - postgres
+    ports:
+      - "800:8052"
+    hostname: awxweb
+    user: root
+    environment:
+      SECRET_KEY: 4@bbcc01
+      DATABASE_USER: awx
+      DATABASE_PASSWORD: 4wxp@ss01
+      DATABASE_NAME: awx
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: awx
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+    volumes:
+      - ./var-lib-awx-web:/var/lib/awx
+
+  awx_task:
+    # image: "geerlingguy/awx_task:latest"
+    image: "ansible/awx_task:latest"
+    links:
+      - rabbitmq
+      - memcached
+      - awx_web:awxweb
+      - postgres
+    hostname: awx
+    user: root
+    environment:
+      SECRET_KEY: 4@bbcc01
+      DATABASE_USER: awx
+      DATABASE_PASSWORD: 4wxp@ss01
+      DATABASE_NAME: awx
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: awx
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+    volumes:
+      - ./var-lib-awx-task:/var/lib/awx
