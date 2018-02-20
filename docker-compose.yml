@@ -1,7 +1,8 @@
 version: '3'
 services:
   postgres:
-    image: "postgres:9.6"
+#    image: "postgres:9.6"
+    image: "widyamedia/awx_postgres"
     environment:
       POSTGRES_USER: awx
       POSTGRES_PASSWORD: 4wxp@ss01
@@ -10,16 +11,19 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
 
   rabbitmq:
-    image: "rabbitmq:3"
+#    image: "rabbitmq:3"
+    image: "widyamedia/awx_rabbit"
     environment:
       RABBITMQ_DEFAULT_VHOST: awx
 
   memcached:
-    image: "memcached:alpine"
+#    image: "memcached:alpine"
+    image: "widyamedia/awx_memcached"
 
   awx_web:
     # image: "geerlingguy/awx_web:latest"
-    image: "ansible/awx_web:latest"
+#    image: "ansible/awx_web:latest"
+    image: "widyamedia/awx_web"
     links:
       - rabbitmq
       - memcached
@@ -47,7 +51,8 @@ services:
 
   awx_task:
     # image: "geerlingguy/awx_task:latest"
-    image: "ansible/awx_task:latest"
+#    image: "ansible/awx_task:latest"
+    image: "widyamedia/awx_task"
     links:
       - rabbitmq
       - memcached
